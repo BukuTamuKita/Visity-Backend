@@ -1,6 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
+
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $table = "users";
     /**
      * The attributes that are mass assignable.
      *
@@ -28,12 +30,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function host(){
+        return $this->belongsTo('App\Models\Host');
+    }
+
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+    
     ];
 }
