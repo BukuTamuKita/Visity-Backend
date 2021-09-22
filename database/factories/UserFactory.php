@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-namespace Database\Factories;
 
 use App\Models\User;
 use Faker\Generator as Faker;
@@ -26,6 +25,6 @@ $factory->define(User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' =>  Hash::make('password'), // password
         'role' => $faker->randomElement(['admin', 'host']),
-        'photo' => Str::random(10).'png',
+        'photo' => $faker->imageUrl($width = 640, $height = 480),
     ];
 });
