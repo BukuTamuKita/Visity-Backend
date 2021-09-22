@@ -11,7 +11,7 @@ $factory->define(Guest::class, function (Faker $faker) {
     return [
         //
         'name'=>$faker->name,
-        'nik' => strval(rand(1100000000, 9499999999)),
+        'nik' => strval(rand(1100000000000000, 9499999999999999)),
         'email'=>$faker->email,
         'address'=>$faker->address
     ];

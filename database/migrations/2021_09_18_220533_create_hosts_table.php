@@ -15,10 +15,10 @@ class CreateHostsTable extends Migration
     {
         Schema::create('hosts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('nip');
+            $table->string('name',64);
+            $table->string('nip',16);
             $table->string('position');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
