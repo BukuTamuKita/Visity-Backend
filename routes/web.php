@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/user','UserController@index');
+Route::get('/host','HostController@index');
+Route::get('/appointment','AppointmentController@index');
+Route::get('/guest','GuestController@index');
+
