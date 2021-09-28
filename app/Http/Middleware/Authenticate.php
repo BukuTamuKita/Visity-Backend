@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class Authenticate extends Middleware
 {
+    protected $auth;
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
@@ -18,4 +20,10 @@ class Authenticate extends Middleware
             return route('login');
         }
     }
+
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+    
 }
