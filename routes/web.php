@@ -21,4 +21,5 @@ Route::get('/user','UserController@index');
 Route::get('/host','HostController@index');
 Route::get('/appointment','AppointmentController@index');
 Route::get('/guest','GuestController@index');
+Route::get('/user/{id}','UserController@show');
 

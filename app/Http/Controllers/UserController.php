@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -17,8 +18,8 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::all();
-        return UserResource::collection($users);
+        // $users = User::all();
+        return UserResource::collection(User::all());
     }
 
     /**
@@ -48,9 +49,19 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($id)
     {
-        //
+        try {
+            // $data = new UserResource(User::findOrFail($id));
+            // return new UserResource(User::findOrFail($id));
+            return new UserResource(User::where('role','!=','admin')->findOrFail($id));
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'User ' . $id . ' not found.'
+            ], 404);
+        }
     }
 
     /**
