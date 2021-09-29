@@ -87,7 +87,8 @@ class AuthController extends Controller
     // }
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['loginAdmin', 'register', 'loginHost']]);
+        // return auth()->shouldUse('api');
     }
 
     public function register(Request $request)
@@ -97,12 +98,10 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
-            'role' => 'required|string'
+            'role' => 'required|string',
         ]);
 
         try {
-            if($request->role == "host"){
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -110,7 +109,7 @@ class AuthController extends Controller
                 'role' => $request->role,
             ]);
 
-            // if($request->role->is_a("host")){
+            if($request->role == "host"){
                 Host::create([
                     'name' => $user->name,
                     'nip' => $request->name,
@@ -130,7 +129,7 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request)
+    public function loginAdmin(Request $request)
     {
         $this->validate($request, [
             'email' => 'required|string',
@@ -138,16 +137,100 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only(['email', 'password']);
-
-        if (!$token = Auth::attempt($credentials)) {
+        
+        //  if($role == "host"){
+            if ($token= Auth::attempt($credentials)) {
+                $email = User::where('email',$request->email)->firstOrFail();
+        // $id = User::find($email);
+                $role = $email->role;
+                if($role == "admin"){
+                    return $this->respondWithToken($token);
+                } else{
+                    return response()->json([
+                        'code' => 401,
+                        'message' => 'Unauthorized',
+                        'description' => 'User unauthorized.',
+                        // 'description' => $role,
+                        // 'notes' => $role,
+                    ], 401);
+                    
+                }
+                // return response()->json([
+                //     'code' => 401,
+                //     'message' => 'Unauthorized',
+                //     // 'description' => 'User unauthorized.',
+                //     'description' => $role,
+                //     // 'notes' => $role,
+                // ], 401);
+            } 
+        // } 
+        else {
             return response()->json([
                 'code' => 401,
                 'message' => 'Unauthorized',
                 'description' => 'User unauthorized.',
+                // 'description' =>,
+                // 'notes' => $role,
+            ], 401);
+        }
+    }
+
+    // public function findByEmail(Request $request){
+    //     $email = User::where('email',$request->email)->firstOrFail();
+
+    // }
+
+    public function loginHost(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+        // $email = User::where('email',$request->email)->firstOrFail();
+        // // $id = User::find($email);
+        // $role = $email->role;
+        // $role = User::where('email',$request->email)->get('role');
+        $credentials = $request->only(['email', 'password']);
+        // $token = null;
+
+        // if($role == "host"){
+            if ($token= Auth::attempt($credentials)) {
+                $email = User::where('email',$request->email)->firstOrFail();
+        // $id = User::find($email);
+                $role = $email->role;
+                if($role == "host"){
+                    return $this->respondWithToken($token);
+                } else{
+                    return response()->json([
+                        'code' => 401,
+                        'message' => 'Unauthorized',
+                        'description' => 'User unauthorized.',
+                        // 'description' => $role,
+                        // 'notes' => $role,
+                    ], 401);
+                    
+                }
+                // return response()->json([
+                //     'code' => 401,
+                //     'message' => 'Unauthorized',
+                //     // 'description' => 'User unauthorized.',
+                //     'description' => $role,
+                //     // 'notes' => $role,
+                // ], 401);
+            } 
+        // } 
+        else {
+            return response()->json([
+                'code' => 401,
+                'message' => 'Unauthorized',
+                'description' => 'User unauthorized.',
+                // 'description' =>,
+                // 'notes' => $role,
             ], 401);
         }
 
-        return $this->respondWithToken($token);
+       
+
     }
 
     public function logout()

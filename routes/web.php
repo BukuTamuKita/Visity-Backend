@@ -23,7 +23,7 @@ Route::get('/appointment','AppointmentController@index');
 Route::get('/guest','GuestController@index');
 Route::get('/user/{id}','UserController@show');
 
-Route::post('/host/create','HostController@store');
+// Route::post('/host/create','HostController@store');
 
 
 // $router->group(['prefix' => 'auth'], function () use ($router) {

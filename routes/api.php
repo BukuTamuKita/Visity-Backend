@@ -33,8 +33,12 @@ use Illuminate\Support\Facades\Route;
 // });
 
 $router->group(['prefix' => 'auth'], function () use ($router) {
-    $router->post('login', [
-        'as' => 'auth.login', 'uses' => 'AuthController@login'
+    $router->post('loginHost', [
+        'as' => 'auth.login', 'uses' => 'AuthController@loginHost'
+    ]);
+
+    $router->post('loginAdmin', [
+        'as' => 'auth.loginAdmin', 'uses' => 'AuthController@loginAdmin'
     ]);
 
     $router->post('logout', [
