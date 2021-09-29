@@ -14,6 +14,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Route::group([
+
+//     // 'middleware' => 'api',
+//     'prefix' => 'auth'
+
+// ], function ($router) {
+
+//     Route::post('login', 'AuthController@login');
+//     Route::post('logout', 'AuthController@logout');
+//     Route::post('refresh', 'AuthController@refresh');
+//     Route::post('me', 'AuthController@me');
+
+// });
+
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('login', [
+        'as' => 'auth.login', 'uses' => 'AuthController@login'
+    ]);
+
+    $router->post('logout', [
+        'as' => 'auth.logout', 'uses' => 'AuthController@logout'
+    ]);
+
+    $router->post('refresh', [
+        'as' => 'auth.refresh', 'uses' => 'AuthController@refresh'
+    ]);
+
+    $router->post('me', [
+        'as' => 'auth.me', 'uses' => 'AuthController@me'
+    ]);
+
+    $router->post('register', [
+        'as' => 'auth.register', 'uses' => 'AuthController@register'
+    ]);
 });
+

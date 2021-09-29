@@ -23,3 +23,23 @@ Route::get('/appointment','AppointmentController@index');
 Route::get('/guest','GuestController@index');
 Route::get('/user/{id}','UserController@show');
 
+Route::post('/host/create','HostController@store');
+
+
+// $router->group(['prefix' => 'auth'], function () use ($router) {
+//     $router->post('login', [
+//         'as' => 'auth.login', 'uses' => 'AuthController@login'
+//     ]);
+
+//     $router->post('logout', [
+//         'as' => 'auth.logout', 'uses' => 'AuthController@logout'
+//     ]);
+
+//     $router->post('refresh', [
+//         'as' => 'auth.refresh', 'uses' => 'AuthController@refresh'
+//     ]);
+
+//     $router->post('me', [
+//         'as' => 'auth.me', 'uses' => 'AuthController@me'
+//     ]);
+// });

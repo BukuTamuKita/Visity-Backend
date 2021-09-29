@@ -41,6 +41,21 @@ class HostController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request, [
+            'name' => 'required',
+            'nip' => 'required',
+            'position' => 'required',
+            'user_id' => 'required'
+        ]);
+        // Host::create([
+        //     'name' => request('name'),
+        //     'nip' => request('nip'),
+        //     'position' => request('position'),
+        //     'user_id' => auth()->id()
+        // ]);
+
+        $host = Host::create($request->all());
+        return response()->json($host, 201);
     }
 
     /**
