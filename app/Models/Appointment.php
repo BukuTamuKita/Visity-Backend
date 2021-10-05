@@ -17,7 +17,5 @@ class Appointment extends Model
     public function guest(){
         return $this->belongsTo('App\Models\Guest', 'guests_id');
     }
-
-
     //
 }

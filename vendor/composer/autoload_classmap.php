@@ -13,7 +13,6 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\GuestController' => $baseDir . '/app/Http/Controllers/GuestController.php',
     'App\\Http\\Controllers\\HostController' => $baseDir . '/app/Http/Controllers/HostController.php',
-    'App\\Http\\Controllers\\TokenController' => $baseDir . '/app/Http/Controllers/TokenController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',

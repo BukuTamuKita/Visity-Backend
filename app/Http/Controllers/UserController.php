@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public $order_table = 'users';
+    // public $order_table = 'users';
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +21,10 @@ class UserController extends Controller
     {
         //
         // $users = User::all();
-        return UserResource::collection(User::all());
+        $user = User::when([$this->order_table, $this->orderBy], \Closure::fromCallable([$this, 'queryOrderBy']))
+        ->when($this->limit, \Closure::fromCallable([$this, 'queryLimit']));
+
+        return UserResource::collection($user);
     }
 
     /**
