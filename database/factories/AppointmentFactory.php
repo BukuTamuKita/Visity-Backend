@@ -9,11 +9,16 @@ use App\Models\Guest;
 use Faker\Generator as Faker;
 
 $factory->define(Appointment::class, function (Faker $faker) {
+    $host_ids = Host::all()->pluck('id')->toArray();
+    $guest_ids = Guest::all()->pluck('id')->toArray();
     return [
-        'hosts_id'=> factory(Host::class),
-        'guests_id'=> factory(Guest::class),
+        'hosts_id' => $faker->randomElement($host_ids),
+        'guests_id' => $faker->randomElement($guest_ids),
+        // 'hosts_id'=> factory(Host::class),
+        // 'guests_id'=> factory(Guest::class),
         'purpose'=> $faker->sentence(6),
-        'status'=>$faker->randomElement(['waiting','accepted','declined','pending']),
+        'status'=>$faker->randomElement(['waiting','accepted','declined']),
+        'notes'=> $faker->sentence(6),
         'date'=>$faker->date('Y-m-d','now'),
         'time'=>$faker->time('H:i','now'),
         //

@@ -9,6 +9,7 @@ class Host extends Model
 {
 
     protected $table = "hosts";
+    protected $fillable=['name','nip','position','user_id'];
 
     public function appointments(){
         return $this->hasMany('App\Models\Appointment');

@@ -12,7 +12,10 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+    'timezone' => 'Asia/Jakarta',
+    'locale' => 'id',   
+    'faker_locale' => 'id_ID',
+    
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

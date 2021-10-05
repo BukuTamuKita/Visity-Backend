@@ -23,7 +23,8 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' =>  Hash::make('password'), // password
+        // 'password' =>  Hash::make('password'), // password
+        'password' =>  $faker->password(6,8), // password
         'role' => $faker->randomElement(['admin', 'host']),
         'photo' => $faker->imageUrl($width = 640, $height = 480),
     ];
