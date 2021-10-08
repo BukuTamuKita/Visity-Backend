@@ -38,11 +38,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Models\Host');
     }
 
-    public function tokens()
-    {
-        return $this->belongsTo('App\Models\Token');
-    }
-
     public function getJWTIdentifier()
     {
         return $this->getKey();

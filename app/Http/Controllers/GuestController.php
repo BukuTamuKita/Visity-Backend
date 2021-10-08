@@ -77,7 +77,7 @@ class GuestController extends Controller
             return response()->json([
                 'code' => 404,
                 'message' => 'Not Found',
-                'description' => 'User ' . $id . ' not found.'
+                'description' => 'Guest ' . $id . ' not found.'
             ], 404);
         }
     }
@@ -128,7 +128,7 @@ class GuestController extends Controller
             return response()->json([
                 'code' => 404,
                 'message' => 'Not Found',
-                'description' => 'Host ' . $id . ' not found.'
+                'description' => 'Guest ' . $id . ' not found.'
             ], 404);
         }
     }

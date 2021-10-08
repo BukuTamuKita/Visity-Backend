@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Models\Host;
-use App\Models\Token;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
@@ -160,42 +159,13 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
         //
-    }
-
-    public function getTokens(int $id)
-    {
         try {
-            $tokens = User::findOrFail($id)->tokens;
+            User::findOrFail($id)->delete();
 
-            return response()->json($tokens);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'code' => 404,
-                'message' => 'Not Found',
-                'description' => 'User ' . $id . ' not found.'
-            ], 404);
-        }
-    }
-
-    public function createToken(Request $request, int $id)
-    {
-        // TODO: Fix sesuai field Token
-        $this->validate($request, [
-            'type' => 'required',
-        ]);
-
-        try {
-            $token = Token::create([
-                'user_id' => User::findOrFail($id),
-                // TODO: Fix generate token
-                'token' => Str::random(10),
-                'type' => $request->type,
-            ]);
-
-            return response()->json($token, 201);
+            return response()->json([], 204);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'code' => 404,

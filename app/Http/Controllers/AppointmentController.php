@@ -72,14 +72,14 @@ class AppointmentController extends Controller
             'guest' => 'required|string',
             'purpose' => 'required|string|max:255',
         ]);
-        $host = Host::where('name',$request->host)->firstOrFail();
-        $guest = Guest::where('name',$request->guest)->firstOrFail();
+        // $host = Host::where('name',$request->host)->firstOrFail();
+        // $guest = Guest::where('name',$request->guest)->firstOrFail();
 
         // $hostId = $hostId->id;
         // $guestId = $guestId->id;
         $appointment = Appointment::create([
-            'host_id'=> $host->id,
-            'guest_id' => $guest->id,
+            'host_id'=> $request->host,
+            'guest_id' => $request->guest,
             'purpose' => $request->purpose,
             'status' => 'waiting',
             'date' => $current_date,
@@ -104,9 +104,18 @@ class AppointmentController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\Http\Response
      */
-    public function show(Appointment $appointment)
+    public function show($id)
     {
         //
+        try {
+            return new AppointmentResource(Appointment::findOrFail($id));
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'Appointment ' . $id . ' not found.'
+            ], 404);
+        }
     }
 
     /**
@@ -117,26 +126,7 @@ class AppointmentController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        // $this->validate($request, [
-        //     'host_id' => 'required|exists:host,id',
-        //     'status' => 'required|in:waiting,accepted,declined',
-        // ]);
 
-        // try {
-        //     $appointment = Appointment::findOrFail($id);
-        //     $appointment->host()->$request->host_id => ['status' => $request->status]
-
-        //     $host = $appointment->host()->where('id', $request->host_id)->first();
-
-        //     return new AppointmentResource($host);
-        // } catch (ModelNotFoundException $e) {
-        //     return response()->json([
-        //         'code' => 404,
-        //         'message' => 'Not Found',
-        //         'description' => 'Schedule ' . $id . ' not found.'
-        //     ], 404);
-        // }
-        //
     }
 
     /**
@@ -164,7 +154,7 @@ class AppointmentController extends Controller
             return response()->json([
                 'code' => 404,
                 'message' => 'Not Found',
-                'description' => 'User ' . $id . ' not found.'
+                'description' => 'Appointment ' . $id . ' not found.'
             ], 404);
         }
     }
@@ -175,8 +165,19 @@ class AppointmentController extends Controller
      * @param  \App\Models\Appointment  $appointment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Appointment $appointment)
+    public function destroy($id)
     {
         //
+        try {
+            Appointment::findOrFail($id)->delete();
+
+            return response()->json([], 204);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'Appointment ' . $id . ' not found.'
+            ], 404);
+        }
     }
 }

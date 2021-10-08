@@ -102,7 +102,11 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             ]);
 
             $router->get('{id}', [
-                'as' => 'guest.show', 'uses' => 'GuestController@show'
+                'as' => 'appointment.show', 'uses' => 'AppointmentController@show',
+            ]);
+
+            $router->delete('{id}', [
+                'as' => 'appointment.destroy', 'uses' => 'AppointmentController@destroy'
             ]);
         });
     });

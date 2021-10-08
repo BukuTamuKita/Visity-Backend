@@ -91,7 +91,7 @@ class HostController extends Controller
             return response()->json([
                 'code' => 404,
                 'message' => 'Not Found',
-                'description' => 'User ' . $id . ' not found.'
+                'description' => 'Host ' . $id . ' not found.'
             ], 404);
         }
     }

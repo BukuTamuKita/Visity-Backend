@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             HostSeeder::class,
             GuestSeeder::class,
-            TokenSeeder::class,
             AppointmentSeeder::class,
         ]);
         // $this->call(UserSeeder::class);

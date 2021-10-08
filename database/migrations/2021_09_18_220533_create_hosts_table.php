@@ -18,7 +18,7 @@ class CreateHostsTable extends Migration
             $table->string('name',64);
             $table->string('nip',16);
             $table->string('position');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
