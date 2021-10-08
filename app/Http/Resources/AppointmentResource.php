@@ -16,15 +16,10 @@ class AppointmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'host' => [
-                $this->host->name,
-                $this->host->nip
-            ],
-            'guest' => [
-                $this->guest->name,
-                $this->guest->nik,
-            ],
+            'host' => new HostResource($this->host),
+            'guest' => new GuestResource($this->guest),
             'purpose'=> $this->purpose,
+            'notes' => $this->notes,
             'status' => $this->status,
             'date_time' => [
                 $this->date,

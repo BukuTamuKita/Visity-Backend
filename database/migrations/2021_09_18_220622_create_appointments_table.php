@@ -15,8 +15,8 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hosts_id')->constrained('hosts');
-            $table->foreignId('guests_id')->constrained('guests');
+            $table->foreignId('host_id')->constrained('hosts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('guest_id')->constrained('guests')->onUpdate('cascade')->onDelete('cascade');
             $table->string('purpose');
             $table->enum('status',['waiting','accepted','declined'])->default('waiting');
             $table->string('notes')->nullable();

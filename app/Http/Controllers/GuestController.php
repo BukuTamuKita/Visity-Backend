@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\GuestResource;
 use App\Models\Guest;
+use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
+    public $order_table = 'guests';
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +20,10 @@ class GuestController extends Controller
     public function index()
     {
         //
-        $users = Guest::all();
-        return GuestResource::collection($users);
+        $user = Guest::when([$this->order_table, $this->orderBy], \Closure::fromCallable([$this, 'queryOrderBy']))
+        ->when($this->limit, \Closure::fromCallable([$this, 'queryLimit']));
+
+        return GuestResource::collection($user);
     }
 
     /**
@@ -39,6 +45,21 @@ class GuestController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'nip' => 'required|string',
+            'email' => 'required|string',
+            'address' => 'required|string|max:255',
+        ]);
+        // Host::create([
+        //     'name' => request('name'),
+        //     'nip' => request('nip'),
+        //     'position' => request('position'),
+        //     'user_id' => auth()->id()
+        // ]);
+
+        $host = Guest::create($request->all());
+        return response()->json($host, 201);
     }
 
     /**
@@ -47,9 +68,18 @@ class GuestController extends Controller
      * @param  \App\Models\Guest  $guest
      * @return \Illuminate\Http\Response
      */
-    public function show(Guest $guest)
+    public function show($id)
     {
         //
+        try {
+            return new GuestResource(Guest::findOrFail($id));
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'Guest ' . $id . ' not found.'
+            ], 404);
+        }
     }
 
     /**
@@ -84,5 +114,22 @@ class GuestController extends Controller
     public function destroy(Guest $guest)
     {
         //
+    }
+
+    public function getAppointments(int $id){
+        try {
+            $appointment = Guest::findOrFail($id)
+                ->appointments()
+                ->when(['appointments', $this->orderBy], Closure::fromCallable([$this, 'queryOrderBy']))
+                ->when($this->limit, Closure::fromCallable([$this, 'queryLimit']));
+
+            return AppointmentResource::collection($appointment);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'Guest ' . $id . ' not found.'
+            ], 404);
+        }
     }
 }

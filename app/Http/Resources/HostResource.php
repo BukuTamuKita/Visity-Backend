@@ -19,8 +19,7 @@ class HostResource extends JsonResource
             'name' => $this->name,
             'nip' => $this->nip,
             'position' => $this->position,
-            'email' => $this->user->email,
-            'photo'=> $this->user->photo
+            'users' => new UserResource($this->user),
         ];
     }
 }
