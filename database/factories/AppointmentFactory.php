@@ -12,8 +12,8 @@ $factory->define(Appointment::class, function (Faker $faker) {
     $host_ids = Host::all()->pluck('id')->toArray();
     $guest_ids = Guest::all()->pluck('id')->toArray();
     return [
-        'hosts_id' => $faker->randomElement($host_ids),
-        'guests_id' => $faker->randomElement($guest_ids),
+        'host_id' => $faker->randomElement($host_ids),
+        'guest_id' => $faker->randomElement($guest_ids),
         // 'hosts_id'=> factory(Host::class),
         // 'guests_id'=> factory(Guest::class),
         'purpose'=> $faker->sentence(6),

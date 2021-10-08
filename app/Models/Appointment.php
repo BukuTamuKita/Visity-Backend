@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     protected $table = "appointments";
-    protected $fillable=['hosts_id','guests_id'];
+    protected $fillable=['host_id','guest_id','status','notes','purpose','date','time'];
 
     public function host(){
-        return $this->belongsTo('App\Models\Host', 'hosts_id');
+        return $this->belongsTo('App\Models\Host', 'host_id');
     }
 
     public function guest(){
-        return $this->belongsTo('App\Models\Guest', 'guests_id');
+        return $this->belongsTo('App\Models\Guest', 'guest_id');
     }
     //
 }

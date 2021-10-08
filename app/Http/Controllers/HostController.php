@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\HostResource;
 use App\Models\Host;
+use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class HostController extends Controller
 {
+    public $order_table = 'hosts';
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +23,21 @@ class HostController extends Controller
         //
         // $hosts = Host::all()->toArray();
         // $hosts = Host::find(2)->user->email;
-        $hosts = Host::all();
-        return HostResource::collection($hosts);
+        // $hosts = Host::when([$this->order_table, $this->orderBy], \Closure::fromCallable([$this, 'queryOrderBy']))
+        // ->when($this->limit, \Closure::fromCallable([$this, 'queryLimit']));
+
+        // return HostResource::collection($hosts);
+        if (Gate::allows('admin')) {
+            $host = Host::when([$this->order_table, $this->orderBy], Closure::fromCallable([$this, 'queryOrderBy']))
+                ->when($this->limit, Closure::fromCallable([$this, 'queryLimit']));
+
+            return HostResource::collection($host);
+            
+        } elseif (Gate::allows('host')) {
+            $host = Host::firstWhere('user_id', $this->user->id);
+
+            return new HostResource($host);
+        }
     }
 
     /**
@@ -41,21 +59,21 @@ class HostController extends Controller
     public function store(Request $request)
     {
         //
-        $this->validate($request, [
-            'name' => 'required',
-            'nip' => 'required',
-            'position' => 'required',
-            'user_id' => 'required'
-        ]);
-        // Host::create([
-        //     'name' => request('name'),
-        //     'nip' => request('nip'),
-        //     'position' => request('position'),
-        //     'user_id' => auth()->id()
+        // $this->validate($request, [
+        //     'name' => 'required',
+        //     'nip' => 'required',
+        //     'position' => 'required',
+        //     'user_id' => 'required'
         // ]);
+        // // Host::create([
+        // //     'name' => request('name'),
+        // //     'nip' => request('nip'),
+        // //     'position' => request('position'),
+        // //     'user_id' => auth()->id()
+        // // ]);
 
-        $host = Host::create($request->all());
-        return response()->json($host, 201);
+        // $host = Host::create($request->all());
+        // return response()->json($host, 201);
     }
 
     /**
@@ -64,9 +82,18 @@ class HostController extends Controller
      * @param  \App\Models\Host  $host
      * @return \Illuminate\Http\Response
      */
-    public function show(Host $host)
+    public function show($id)
     {
         //
+        try {
+            return new HostResource(Host::findOrFail($id));
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'User ' . $id . ' not found.'
+            ], 404);
+        }
     }
 
     /**
@@ -90,6 +117,24 @@ class HostController extends Controller
     public function update(Request $request, Host $host)
     {
         //
+        // $this->validate($request, [
+        //     'host' => 'required|string',
+        //     'guest' => 'required|string',
+        //     'purpose' => 'required|string|max:255',
+        // ]);
+        // $host = Host::where('name',$request->host)->firstOrFail();
+        // $guest = Guest::where('name',$request->guest)->firstOrFail();
+
+        // // $hostId = $hostId->id;
+        // // $guestId = $guestId->id;
+        // $appointment = Appointment::create([
+        //     'host_id'=> $host->id,
+        //     'guest_id' => $guest->id,
+        //     'purpose' => $request->purpose,
+        //     'status' => 'waiting',
+        //     'date' => $current_date,
+        //     'time' => $current_time,
+        // ]);
     }
 
     /**
@@ -101,5 +146,22 @@ class HostController extends Controller
     public function destroy(Host $host)
     {
         //
+    }
+
+    public function getAppointments(int $id){
+        try {
+            $appointment = Host::findOrFail($id)
+                ->appointments()
+                ->when(['appointments', $this->orderBy], Closure::fromCallable([$this, 'queryOrderBy']))
+                ->when($this->limit, Closure::fromCallable([$this, 'queryLimit']));
+
+            return AppointmentResource::collection($appointment);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'Host ' . $id . ' not found.'
+            ], 404);
+        }
     }
 }

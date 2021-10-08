@@ -59,34 +59,50 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->get('', [
             'as' => 'hosts.index', 'uses' => 'HostController@index'
         ]);
-
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
+          
             $router->get('{id}', [
-                'as' => 'student.show', 'uses' => 'StudentController@show'
+                'as' => 'hosts.show', 'uses' => 'HostController@show'
             ]);
 
-            $router->get('{id}/subjects', [
-                'as' => 'student.getSubjects', 'uses' => 'StudentController@getSubjects'
+            $router->get('{id}/appointments', [
+                'as' => 'host.getAppointments', 'uses' => 'HostController@getAppointments'
             ]);
 
-            $router->get('{id}/attendances', [
-                'as' => 'student.getAttendances', 'uses' => 'StudentController@getAttendances'
+        });
+    });
+
+    $router->group(['prefix' => 'guests'], function () use ($router) {
+        $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            $router->get('', [
+                'as' => 'guest.index', 'uses' => 'GuestController@index'
+            ]);
+
+            $router->get('{id}', [
+                'as' => 'guest.show', 'uses' => 'GuestController@show'
+            ]);
+
+            $router->get('{id}/appointments', [
+                'as' => 'guest.getAppointments', 'uses' => 'GuestController@getAppointments'
             ]);
         });
     });
 
-    $router->group(['prefix' => 'lecturers'], function () use ($router) {
+    $router->group(['prefix' => 'appointments'], function () use ($router) {
         $router->get('', [
-            'as' => 'lecturer.index', 'uses' => 'LecturerController@index'
+            'as' => 'appointment.index', 'uses' => 'AppointmentController@index'
         ]);
 
+        $router->put('{id}', [
+            'as' => 'appointment.update', 'uses' => 'AppointmentController@update',
+        ]);
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
-            $router->get('{id}', [
-                'as' => 'lecturer.show', 'uses' => 'LecturerController@show'
+            $router->post('', [
+                'as' => 'appointment.store', 'uses' => 'AppointmentController@store',
             ]);
 
-            $router->get('{id}/subjects', [
-                'as' => 'lecturer.getSubjects', 'uses' => 'LecturerController@getSubjects'
+            $router->get('{id}', [
+                'as' => 'guest.show', 'uses' => 'GuestController@show'
             ]);
         });
     });
@@ -246,10 +262,6 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 
     $router->post('me', [
         'as' => 'auth.me', 'uses' => 'AuthController@me'
-    ]);
-
-    $router->post('register', [
-        'as' => 'auth.register', 'uses' => 'AuthController@register'
     ]);
 });
 

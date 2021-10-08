@@ -110,10 +110,14 @@ class AuthController extends Controller
             ]);
 
             if($request->role == "host"){
+                $this->validate($request, [
+                    'nip' => 'required|string|unique:hosts',
+                    'position' => 'required|string',
+                ]);
                 Host::create([
                     'name' => $user->name,
-                    'nip' => $request->name,
-                    'position' => $request->name,
+                    'nip' => $request->nip,
+                    'position' => $request->position,
                     'user_id' => $user->id
                 ]);
             }
@@ -153,7 +157,6 @@ class AuthController extends Controller
                         // 'description' => $role,
                         // 'notes' => $role,
                     ], 401);
-                    
                 }
                 // return response()->json([
                 //     'code' => 401,
