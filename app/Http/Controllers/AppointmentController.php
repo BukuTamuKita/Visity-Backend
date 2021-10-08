@@ -72,11 +72,7 @@ class AppointmentController extends Controller
             'guest' => 'required|string',
             'purpose' => 'required|string|max:255',
         ]);
-        // $host = Host::where('name',$request->host)->firstOrFail();
-        // $guest = Guest::where('name',$request->guest)->firstOrFail();
-
-        // $hostId = $hostId->id;
-        // $guestId = $guestId->id;
+     
         $appointment = Appointment::create([
             'host_id'=> $request->host,
             'guest_id' => $request->guest,
@@ -85,15 +81,6 @@ class AppointmentController extends Controller
             'date' => $current_date,
             'time' => $current_time,
         ]);
-  
-        // Host::create([
-        //     'name' => request('name'),
-        //     'nip' => request('nip'),
-        //     'position' => request('position'),
-        //     'user_id' => auth()->id()
-        // ]);
-
-        // $host = Host::create($request->all());
 
         return response()->json($appointment, 201);
     }
