@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AppointmentExport;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use App\Models\Guest;
@@ -11,6 +12,7 @@ use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AppointmentController extends Controller
 {
@@ -166,5 +168,11 @@ class AppointmentController extends Controller
                 'description' => 'Appointment ' . $id . ' not found.'
             ], 404);
         }
+    }
+
+    public function export_excel(){
+        $current_date = Carbon::now()->format('d-m-Y_H:i');
+
+        return Excel::download(new AppointmentExport, 'Data-Appointment-'.$current_date.'.xlsx');
     }
 }

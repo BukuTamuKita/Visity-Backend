@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// $router->get('appointments/export_excel', [
+//     'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
+// ]);
+
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users', 'middleware' => 'role:admin'], function () use ($router) {
         $router->get('', [
@@ -78,14 +82,21 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         $router->put('{id}', [
             'as' => 'appointment.update', 'uses' => 'AppointmentController@update',
         ]);
+
+      
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
             $router->post('', [
                 'as' => 'appointment.store', 'uses' => 'AppointmentController@store',
             ]);
 
+            $router->get('export_excel', [
+                'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
+            ]);
+
             $router->get('{id}', [
                 'as' => 'appointment.show', 'uses' => 'AppointmentController@show',
             ]);
+
 
             $router->delete('{id}', [
                 'as' => 'appointment.destroy', 'uses' => 'AppointmentController@destroy'
