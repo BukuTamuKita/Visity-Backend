@@ -10,6 +10,7 @@ use App\Models\Host;
 use Carbon\Carbon;
 use Closure;
 use CurlHandle;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -71,8 +72,8 @@ class AppointmentController extends Controller
         $current_time = Carbon::now()->format('H:i');
         //
         $this->validate($request, [
-            'host' => 'required|string',
-            'guest' => 'required|string',
+            'host' => 'required|numeric',
+            'guest' => 'required|numeric',
             'purpose' => 'required|string|max:255',
         ]);
      
@@ -177,14 +178,22 @@ class AppointmentController extends Controller
         return Excel::download(new AppointmentExport, 'Data-Appointment-'.$current_date.'.xlsx');
     }
 
-    public function upload(Request $request){
-        $this->validate($request, [
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-        
-        try{
-            $url = "https://campus.sindika.co.id/index.php/aiktpextractor/extract_mock.json";
+    public function scan_ktp(Request $request){
+        $rules = array(
+            'image' => 'required|mimes:jpeg,jpg,png|max:2048' 
+            );
+        $validator = validator()->make($request->only('image'), $rules);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Bad Request',
+                'description' => 'Scan Failed!, Image not Found or Wrong format'
+            ], 400);
+              
+        } else {
             $image = $request->file('image');
+            $url = "https://campus.sindika.co.id/index.php/aiktpextractor/extract_mock.json";
             $data = http_build_query($image);
             $ch = curl_init();
             $headers = ['Secret: 7CB1912A835DAEBCE58BDEA4EC899'];
@@ -197,21 +206,15 @@ class AppointmentController extends Controller
             $resp = curl_exec($ch);
 
             if($e = curl_error($ch)){
-                echo $e;
+                return response()->json([
+                    'error' => $e
+                ]);
             } else {
                 $decoded = json_decode($resp);
                 return response()->json([$decoded],200);
-
             }
             curl_close($ch);
-        
-        } catch (\Exception $e) {
-            return response()->json([
-                'code' => 409,
-                'message' => 'Conflict',
-                'description' => 'User Creation Failed!',
-                'exception' => $e
-            ], 409);
         }
+        
     }
 }

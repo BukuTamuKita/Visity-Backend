@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Models\Host;
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
@@ -174,4 +175,19 @@ class UserController extends Controller
             ], 404);
         }
     }
+    // public function upload(Request $request){
+    //     $this->validate($request, [
+    //         'input_img' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    //     ]);
+    
+    //     if ($request->hasFile('input_img')) {
+    //         $image = $request->file('input_img');
+    //         $name = time().'.'.$image->getClientOriginalExtension();
+    //         $destinationPath = public_path('/images');
+    //         $image->move($destinationPath, $name);
+    //         $this->save();
+    
+    //         return back()->with('success','Image Upload successfully');
+    //     }
+    // }
 }
