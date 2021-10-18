@@ -47,19 +47,17 @@ class GuestController extends Controller
         //
         $this->validate($request, [
             'name' => 'required|string',
-            'nip' => 'required|string',
+            'nik' => 'required|string',
             'email' => 'required|string',
             'address' => 'required|string|max:255',
         ]);
-        // Host::create([
-        //     'name' => request('name'),
-        //     'nip' => request('nip'),
-        //     'position' => request('position'),
-        //     'user_id' => auth()->id()
-        // ]);
-
-        $host = Guest::create($request->all());
-        return response()->json($host, 201);
+        $guest = Guest::where('nik',$request->nik)->first();
+        if(Guest::where('nik',$request->nik)->exists()){
+           $guest->update($request->all());
+        } else {
+            $guest = Guest::create($request->all());
+        }
+        return response()->json($guest, 201);
     }
 
     /**

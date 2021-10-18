@@ -9,6 +9,7 @@ use App\Models\Guest;
 use App\Models\Host;
 use Carbon\Carbon;
 use Closure;
+use CurlHandle;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -174,5 +175,43 @@ class AppointmentController extends Controller
         $current_date = Carbon::now()->format('d-m-Y_H:i');
 
         return Excel::download(new AppointmentExport, 'Data-Appointment-'.$current_date.'.xlsx');
+    }
+
+    public function upload(Request $request){
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        
+        try{
+            $url = "https://campus.sindika.co.id/index.php/aiktpextractor/extract_mock.json";
+            $image = $request->file('image');
+            $data = http_build_query($image);
+            $ch = curl_init();
+            $headers = ['Secret: 7CB1912A835DAEBCE58BDEA4EC899'];
+            curl_setopt($ch,CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+            
+            $resp = curl_exec($ch);
+
+            if($e = curl_error($ch)){
+                echo $e;
+            } else {
+                $decoded = json_decode($resp);
+                return response()->json([$decoded],200);
+
+            }
+            curl_close($ch);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 409,
+                'message' => 'Conflict',
+                'description' => 'User Creation Failed!',
+                'exception' => $e
+            ], 409);
+        }
     }
 }
