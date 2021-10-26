@@ -9,6 +9,8 @@ use App\Models\Guest;
 use App\Models\Host;
 use Carbon\Carbon;
 use Closure;
+use CurlHandle;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -70,8 +72,8 @@ class AppointmentController extends Controller
         $current_time = Carbon::now()->format('H:i');
         //
         $this->validate($request, [
-            'host' => 'required|string',
-            'guest' => 'required|string',
+            'host' => 'required|numeric',
+            'guest' => 'required|numeric',
             'purpose' => 'required|string|max:255',
         ]);
      
@@ -174,5 +176,45 @@ class AppointmentController extends Controller
         $current_date = Carbon::now()->format('d-m-Y_H:i');
 
         return Excel::download(new AppointmentExport, 'Data-Appointment-'.$current_date.'.xlsx');
+    }
+
+    public function scan_ktp(Request $request){
+        $rules = array(
+            'image' => 'required|mimes:jpeg,jpg,png|max:2048' 
+            );
+        $validator = validator()->make($request->only('image'), $rules);
+
+        if($validator->fails()){
+            return response()->json([
+                'code' => 400,
+                'message' => 'Bad Request',
+                'description' => 'Scan Failed!, Image not Found or Wrong format'
+            ], 400);
+              
+        } else {
+            $image = $request->file('image');
+            $url = "https://campus.sindika.co.id/index.php/aiktpextractor/extract_mock.json";
+            $data = http_build_query($image);
+            $ch = curl_init();
+            $headers = ['Secret: 7CB1912A835DAEBCE58BDEA4EC899'];
+            curl_setopt($ch,CURLOPT_URL,$url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+            
+            $resp = curl_exec($ch);
+
+            if($e = curl_error($ch)){
+                return response()->json([
+                    'error' => $e
+                ]);
+            } else {
+                $decoded = json_decode($resp);
+                return response()->json([$decoded],200);
+            }
+            curl_close($ch);
+        }
+        
     }
 }

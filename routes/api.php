@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// $router->get('appointments/export_excel', [
-//     'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
-// ]);
-
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users', 'middleware' => 'role:admin'], function () use ($router) {
         $router->get('', [
@@ -68,6 +64,10 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
                 'as' => 'guest.show', 'uses' => 'GuestController@show'
             ]);
 
+            $router->post('', [
+                'as' => 'guest.store', 'uses' => 'GuestController@store'
+            ]);
+
             $router->get('{id}/appointments', [
                 'as' => 'guest.getAppointments', 'uses' => 'GuestController@getAppointments'
             ]);
@@ -89,9 +89,6 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
                 'as' => 'appointment.store', 'uses' => 'AppointmentController@store',
             ]);
 
-            $router->get('export_excel', [
-                'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
-            ]);
 
             $router->get('{id}', [
                 'as' => 'appointment.show', 'uses' => 'AppointmentController@show',
@@ -103,6 +100,19 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             ]);
         });
     });
+    
+    $router->group(['prefix' => 'utils'], function () use ($router) {
+        $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            $router->get('export_excel', [
+                'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
+            ]);
+            
+            $router->post('scan_ktp', [
+                'as' => 'scan_ktp', 'uses' => 'AppointmentController@scan_ktp',
+            ]);
+        });
+    });
+
 });
 
 $router->group(['prefix' => 'auth'], function () use ($router) {
