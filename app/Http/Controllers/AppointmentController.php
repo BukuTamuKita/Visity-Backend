@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Exports\AppointmentExport;
 use App\Http\Resources\AppointmentResource;
+use App\Http\Resources\GuestResource;
 use App\Models\Appointment;
 use App\Models\Guest;
 use App\Models\Host;
 use Carbon\Carbon;
 use Closure;
 use CurlHandle;
+use App\Mail\VisityEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Concerns\ToArray;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AppointmentController extends Controller
@@ -216,5 +220,40 @@ class AppointmentController extends Controller
             curl_close($ch);
         }
         
+    }
+
+    public function sendEmail(int $id){
+        $guest = Appointment::findOrFail($id)->guest();
+        $guestId = $guest->pluck('id');
+        $getGuest = Guest::where('id',$guestId)->select("name","email")->first();
+        $guestName = $getGuest->name;
+        $guestEmail = $getGuest->email;
+        $appointment = Appointment::findOrFail($id);
+        $status = $appointment->status;
+        $notes = $appointment->notes;
+
+        $details = [
+            'title' => 'Hello '. $guestName. ',',
+            'heading' => '***PLEASE DO NOT REPLY TO THIS EMAIL***',
+            'body'=> 'Hasil keputusan appointment dengan Host: '. $status,
+            'note' => 'Dengan keterangan tambahan:  '. $notes,
+        ];
+
+        if($guestEmail==null){
+            return response()->json([
+                'code' => 200,
+                'message' => 'OK',
+                'description' => 'Success',
+            ], 200); 
+        } else{
+            Mail::to($guestEmail)->send(new VisityEmail($details));
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'OK',
+                'description' => 'Email Konfirmasi telah dikirim halo halo',
+            ], 200); 
+        }
+     
     }
 }

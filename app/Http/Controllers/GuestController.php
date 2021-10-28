@@ -48,7 +48,7 @@ class GuestController extends Controller
         $this->validate($request, [
             'name' => 'required|string',
             'nik' => 'required|string',
-            'email' => 'required|string',
+            'email' => 'nullable|string',
             'address' => 'required|string|max:255',
         ]);
         $guest = Guest::where('nik',$request->nik)->first();
