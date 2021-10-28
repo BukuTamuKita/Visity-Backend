@@ -102,7 +102,11 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     });
     
     $router->group(['prefix' => 'utils'], function () use ($router) {
+        $router->post('send_email/{id}',[
+            'as' => 'appointment.send_email', 'uses' => 'AppointmentController@sendEmail',   
+        ]);
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            
             $router->get('export_excel', [
                 'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
             ]);

@@ -9,8 +9,9 @@ class Guest extends Model
 {
     protected $table = "guests";
     protected $fillable=['name','nik','address','email'];
+
     public function appointments(){
-        return $this->hasMany('App\Models\Appointment');
+        return $this->hasMany('App\Models\Appointment', 'guest_id');
     }
     //
 }
