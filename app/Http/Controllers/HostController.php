@@ -20,13 +20,6 @@ class HostController extends Controller
      */
     public function index()
     {
-        //
-        // $hosts = Host::all()->toArray();
-        // $hosts = Host::find(2)->user->email;
-        // $hosts = Host::when([$this->order_table, $this->orderBy], \Closure::fromCallable([$this, 'queryOrderBy']))
-        // ->when($this->limit, \Closure::fromCallable([$this, 'queryLimit']));
-
-        // return HostResource::collection($hosts);
         if (Gate::allows('admin')) {
             $host = Host::when([$this->order_table, $this->orderBy], Closure::fromCallable([$this, 'queryOrderBy']))
                 ->when($this->limit, Closure::fromCallable([$this, 'queryLimit']));
@@ -58,22 +51,7 @@ class HostController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // $this->validate($request, [
-        //     'name' => 'required',
-        //     'nip' => 'required',
-        //     'position' => 'required',
-        //     'user_id' => 'required'
-        // ]);
-        // // Host::create([
-        // //     'name' => request('name'),
-        // //     'nip' => request('nip'),
-        // //     'position' => request('position'),
-        // //     'user_id' => auth()->id()
-        // // ]);
 
-        // $host = Host::create($request->all());
-        // return response()->json($host, 201);
     }
 
     /**
@@ -116,25 +94,7 @@ class HostController extends Controller
      */
     public function update(Request $request, Host $host)
     {
-        //
-        // $this->validate($request, [
-        //     'host' => 'required|string',
-        //     'guest' => 'required|string',
-        //     'purpose' => 'required|string|max:255',
-        // ]);
-        // $host = Host::where('name',$request->host)->firstOrFail();
-        // $guest = Guest::where('name',$request->guest)->firstOrFail();
 
-        // // $hostId = $hostId->id;
-        // // $guestId = $guestId->id;
-        // $appointment = Appointment::create([
-        //     'host_id'=> $host->id,
-        //     'guest_id' => $guest->id,
-        //     'purpose' => $request->purpose,
-        //     'status' => 'waiting',
-        //     'date' => $current_date,
-        //     'time' => $current_time,
-        // ]);
     }
 
     /**

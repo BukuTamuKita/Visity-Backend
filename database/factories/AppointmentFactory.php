@@ -14,8 +14,6 @@ $factory->define(Appointment::class, function (Faker $faker) {
     return [
         'host_id' => $faker->randomElement($host_ids),
         'guest_id' => $faker->randomElement($guest_ids),
-        // 'hosts_id'=> factory(Host::class),
-        // 'guests_id'=> factory(Guest::class),
         'purpose'=> $faker->sentence(6),
         'status'=>$faker->randomElement(['waiting','accepted','declined']),
         'notes'=> $faker->sentence(6),

@@ -17,6 +17,5 @@ class DatabaseSeeder extends Seeder
             GuestSeeder::class,
             AppointmentSeeder::class,
         ]);
-        // $this->call(UserSeeder::class);
     }
 }

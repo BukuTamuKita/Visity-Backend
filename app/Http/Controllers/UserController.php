@@ -20,8 +20,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-        // $users = User::all();
         $user = User::when([$this->order_table, $this->orderBy], \Closure::fromCallable([$this, 'queryOrderBy']))
         ->when($this->limit, \Closure::fromCallable([$this, 'queryLimit']));
 
@@ -92,18 +90,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        // try {
-        //     // $data = new UserResource(User::findOrFail($id));
-        //     // return new UserResource(User::findOrFail($id));
-        //     return new UserResource(User::where('role','!=','admin')->findOrFail($id));
-        // } catch (ModelNotFoundException $e) {
-        //     return response()->json([
-        //         'code' => 404,
-        //         'message' => 'Not Found',
-        //         'description' => 'User ' . $id . ' not found.'
-        //     ], 404);
-        // }
-
         try {
             return new UserResource(User::findOrFail($id));
         } catch (ModelNotFoundException $e) {
@@ -175,19 +161,4 @@ class UserController extends Controller
             ], 404);
         }
     }
-    // public function upload(Request $request){
-    //     $this->validate($request, [
-    //         'input_img' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    //     ]);
-    
-    //     if ($request->hasFile('input_img')) {
-    //         $image = $request->file('input_img');
-    //         $name = time().'.'.$image->getClientOriginalExtension();
-    //         $destinationPath = public_path('/images');
-    //         $image->move($destinationPath, $name);
-    //         $this->save();
-    
-    //         return back()->with('success','Image Upload successfully');
-    //     }
-    // }
 }

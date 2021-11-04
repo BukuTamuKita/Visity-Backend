@@ -19,15 +19,5 @@ $factory->define(Host::class, function (Faker $faker) {
                 'role' => 'host'
             ]);
         },
-        // 'user_id'=> rand(1,10),
-        // 'user_id' => User::factory()
-        //     ->has(
-        //         User::factory()
-        //                 ->count(3)
-        //                 ->state(function (array $attributes, User $user) {
-        //                     return ['role' => 'host'];
-        //                 })
-        //     )
-        //     ->create()
     ];
 });
