@@ -17,7 +17,7 @@ $factory->define(Appointment::class, function (Faker $faker) {
         'purpose'=> $faker->sentence(6),
         'status'=>$faker->randomElement(['waiting','accepted','declined']),
         'notes'=> $faker->sentence(6),
-        'date'=>$faker->date('Y-m-d','now'),
+        'date'=>$faker->date('d M Y','now'),
         'time'=>$faker->time('H:i','now'),
         //
     ];

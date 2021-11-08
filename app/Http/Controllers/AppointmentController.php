@@ -72,7 +72,7 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        $current_date = Carbon::now()->format('Y-m-d');
+        $current_date = Carbon::now()->format('d M Y');
         $current_time = Carbon::now()->format('H:i');
         //
         $this->validate($request, [

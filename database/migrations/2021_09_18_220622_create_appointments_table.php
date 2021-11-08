@@ -20,7 +20,7 @@ class CreateAppointmentsTable extends Migration
             $table->string('purpose');
             $table->enum('status',['waiting','accepted','declined'])->default('waiting');
             $table->string('notes')->nullable();
-            $table->date('date');
+            $table->string('date');
             $table->time('time');
             $table->timestamps();
         });
