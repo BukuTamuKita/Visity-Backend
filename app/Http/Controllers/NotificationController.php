@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class NotificationController extends Controller
 {
@@ -12,12 +13,24 @@ class NotificationController extends Controller
      *
      * @return void
      */
+
     public function send(Request $request)
     {
-        return $this->sendNotification(array($request->device_token), array(
-            "title" => $request->title . "want to meet you !", 
+        $user = User::where('email',$request->email)->select('device_token','name')->first();
+        $name = $user->name;
+        $device = $user->device_token;
+        if($device){
+            return $this->sendNotification(array($device), array(
+            "title" => "From ".$name, 
             "body" => $request->body
-          ));
+            ));
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'OK',
+                'description' => 'Success',
+            ], 200); 
+        }
     }
   
     /**

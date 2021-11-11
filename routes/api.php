@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+$router->post('send-notif', [
+    'as' => 'notification', 'uses' => 'NotificationController@send'
+]);
+
+$router->post('save-token', [
+    'as' => 'user.saveFCM', 'uses' => 'UserController@saveToken'
+]);
+
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users', 'middleware' => 'role:admin'], function () use ($router) {
         $router->get('', [
@@ -140,5 +148,3 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
         'as' => 'auth.me', 'uses' => 'AuthController@me'
     ]);
 });
-
-Route::post('send-notification', [App\Http\Controllers\NotificationController::class, 'send']);

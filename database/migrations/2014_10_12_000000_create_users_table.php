@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->enum('role', ['admin', 'host'])
                 ->default('host');
             $table->string('photo')->nullable()->default('default.jpg');
+            $table->string('device_token')->nullable();
             $table->timestamps();
         });
     }

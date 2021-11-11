@@ -161,4 +161,11 @@ class UserController extends Controller
             ], 404);
         }
     }
+
+    public function saveToken(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        $user->update(['device_token'=>$request->token]);
+        return response()->json(['token saved successfully.']);
+    }
 }
