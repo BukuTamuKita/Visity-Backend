@@ -21,6 +21,11 @@ $router->post('send-notif', [
 $router->post('save-token', [
     'as' => 'user.saveFCM', 'uses' => 'UserController@saveToken'
 ]);
+
+$router->post('del-token', [
+    'as' => 'user.delFCM', 'uses' => 'UserController@logoutToken'
+]);
+
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
     

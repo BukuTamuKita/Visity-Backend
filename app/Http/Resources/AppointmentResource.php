@@ -24,7 +24,8 @@ class AppointmentResource extends JsonResource
             'date_time' => [
                 $this->date,
                 $this->time
-            ]
+            ],
+            'created_at' => $this->created_at
         ];
     }
 }

@@ -168,4 +168,11 @@ class UserController extends Controller
         $user->update(['device_token'=>$request->token]);
         return response()->json(['token saved successfully.']);
     }
+
+    public function logoutToken(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        $user->update(['device_token'=>null]);
+        return response()->json(['token deleted successfully.']);
+    }
 }
