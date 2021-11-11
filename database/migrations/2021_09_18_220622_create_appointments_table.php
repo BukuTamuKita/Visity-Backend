@@ -18,7 +18,7 @@ class CreateAppointmentsTable extends Migration
             $table->foreignId('host_id')->constrained('hosts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('guest_id')->constrained('guests')->onUpdate('cascade')->onDelete('cascade');
             $table->string('purpose');
-            $table->enum('status',['waiting','accepted','declined'])->default('waiting');
+            $table->enum('status',['waiting','accepted','declined','canceled'])->default('waiting');
             $table->string('notes')->nullable();
             $table->string('date');
             $table->time('time');

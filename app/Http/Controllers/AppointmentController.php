@@ -135,7 +135,7 @@ class AppointmentController extends Controller
     {
         //
         $this->validate($request, [
-            'status' => 'required|in:accepted,declined',
+            'status' => 'required|in:accepted,declined,canceled',
             'notes' => 'string|max:255|nullable',
         ]);
 
