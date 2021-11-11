@@ -69,8 +69,4 @@ class NotificationController extends Controller
       
         return $response;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8ba5e4856717bbcb4db7d9b0be9cc074bb1c4f3b
