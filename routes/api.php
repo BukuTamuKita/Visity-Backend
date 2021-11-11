@@ -22,13 +22,10 @@ $router->post('save-token', [
     'as' => 'user.saveFCM', 'uses' => 'UserController@saveToken'
 ]);
 
-<<<<<<< HEAD
-=======
 $router->post('del-token', [
     'as' => 'user.delFCM', 'uses' => 'UserController@logoutToken'
 ]);
 
->>>>>>> 8ba5e4856717bbcb4db7d9b0be9cc074bb1c4f3b
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
     
