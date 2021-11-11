@@ -14,27 +14,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+$router->post('send-notif', [
+    'as' => 'notification', 'uses' => 'NotificationController@send'
+]);
+
+$router->post('save-token', [
+    'as' => 'user.saveFCM', 'uses' => 'UserController@saveToken'
+]);
 $router->group(['middleware' => 'auth'], function () use ($router) {
-    $router->group(['prefix' => 'users', 'middleware' => 'role:admin'], function () use ($router) {
-        $router->get('', [
-            'as' => 'user.index', 'uses' => 'UserController@index'
-        ]);
+    $router->group(['prefix' => 'users'], function () use ($router) {
+    
+        $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            $router->get('', [
+                'as' => 'user.index', 'uses' => 'UserController@index'
+            ]);
 
-        $router->get('{id}', [
-            'as' => 'user.show', 'uses' => 'UserController@show'
-        ]);
+            $router->get('{id}', [
+                'as' => 'user.show', 'uses' => 'UserController@show'
+            ]);
 
-        $router->post('', [
-            'as' => 'user.store', 'uses' => 'UserController@store'
-        ]);
+            $router->post('', [
+                'as' => 'user.store', 'uses' => 'UserController@store'
+            ]);
 
-        $router->put('{id}', [
-            'as' => 'user.update', 'uses' => 'UserController@update'
-        ]);
+            $router->put('{id}', [
+                'as' => 'user.update', 'uses' => 'UserController@update'
+            ]);
 
-        $router->delete('{id}', [
-            'as' => 'user.destroy', 'uses' => 'UserController@destroy'
-        ]);
+            $router->delete('{id}', [
+                'as' => 'user.destroy', 'uses' => 'UserController@destroy'
+            ]);
+        });
     });
 
     $router->group(['prefix' => 'hosts'], function () use ($router) {
