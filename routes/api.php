@@ -141,3 +141,4 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     ]);
 });
 
+Route::post('send-notification', [App\Http\Controllers\NotificationController::class, 'send']);
