@@ -29,16 +29,25 @@ Use PHP Composer + Artisan
 > php artisan jwt:secret
 ```
 
-6. Change database settings in .env  
+6. Configure settings in .env
+```bash
+> DB Settings
+> SMTP Settings (optional, if you want to enable mail notification)
+```  
 
 7. Create database file according to .env settings
 
-8. Laravel Migrate and Seed
+8. Generate Storage Link
+```bash
+> php artisan storage:link
+```
+
+9. Laravel Migrate and Seed
 ```cmd
 > php artisan migrate --seed
 ```
 
-9. Laravel Artisan Serve
+10. Laravel Artisan Serve
 ```bash
 > php artisan serve
 ```
