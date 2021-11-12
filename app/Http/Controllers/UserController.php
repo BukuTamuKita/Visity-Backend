@@ -186,10 +186,10 @@ class UserController extends Controller
                 'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
             ]);
             if($validator->fails()){
-                return response()->json(['message' => $validator->errors()->toJson()]);
+                return null;
             }
             $file = $request->file('photo');
-            $path = 'upload/user/' . basename( $_FILES['photo']['name']);
+            $path = 'storage/' . basename( $_FILES['photo']['name']);
             // if($user->photo != null)
                 // File::delete($user->photo);
             move_uploaded_file($_FILES['photo']['tmp_name'], $path);
