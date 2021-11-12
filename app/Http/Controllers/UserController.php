@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Models\Host;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -60,6 +62,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'role' => $request->role,
+                'photo' => $this->uploadImage($request)
             ]);
 
             if($request->role == "host"){
@@ -174,5 +177,26 @@ class UserController extends Controller
         $user = User::where('email',$request->email)->first();
         $user->update(['device_token'=>null]);
         return response()->json(['token deleted successfully.']);
+    }
+
+    public function uploadImage(Request $request){
+        // $user = User::find(Auth::id());
+        if($request->photo != null){
+            $validator = Validator::make($request->all(), [
+                'photo' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('photo');
+            $path = 'upload/user/' . basename( $_FILES['photo']['name']);
+            // if($user->photo != null)
+                // File::delete($user->photo);
+            move_uploaded_file($_FILES['photo']['tmp_name'], $path);
+            // $user->photo = $path;
+            return $path;
+        }
+        // if($user->save())
+            // return response()->json(['message' => 'Uploaded Successfully']);
     }
 }
