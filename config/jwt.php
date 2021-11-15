@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL',60),
+    'ttl' => env('JWT_TTL',null),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,8 +119,8 @@ return [
     | systems in place to revoke the token if necessary.
     |
     */
-
-    'refresh_ttl' => env('JWT_REFRESH_TTL', 20160),
+    // 20160
+    'refresh_ttl' => env('JWT_REFRESH_TTL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -146,11 +146,10 @@ return [
     | present in the payload.
     |
     */
-
+    // 'exp',
     'required_claims' => [
         'iss',
         'iat',
-        'exp',
         'nbf',
         'sub',
         'jti',
