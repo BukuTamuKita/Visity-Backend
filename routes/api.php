@@ -26,6 +26,10 @@ $router->post('del-token', [
     'as' => 'user.delFCM', 'uses' => 'UserController@logoutToken'
 ]);
 
+$router->get('export_excel', [
+    'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
+]);
+
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
     
@@ -121,10 +125,6 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
             'as' => 'appointment.send_email', 'uses' => 'AppointmentController@sendEmail',   
         ]);
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
-            
-            $router->get('export_excel', [
-                'as' => 'appointment.export', 'uses' => 'AppointmentController@export_excel',
-            ]);
             
             $router->post('scan_ktp', [
                 'as' => 'scan_ktp', 'uses' => 'AppointmentController@scan_ktp',

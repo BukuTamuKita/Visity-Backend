@@ -16,12 +16,12 @@ class NotificationController extends Controller
 
     public function send(Request $request)
     {
-        $user = User::where('email',$request->email)->select('device_token','name')->first();
+        $user = User::where('name',$request->name)->select('device_token','name')->first();
         $name = $user->name;
         $device = $user->device_token;
         if($device){
             return $this->sendNotification(array($device), array(
-            "title" => "From ".$name, 
+            "title" => $name, 
             "body" => $request->body
             ));
         } else {
