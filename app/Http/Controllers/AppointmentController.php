@@ -202,33 +202,14 @@ class AppointmentController extends Controller
             $data = ['image' => new CURLFile($image)]; 
             $headers = ['Secret: 7CB1912A835DAEBCE58BDEA4EC899',
         'Content-Type: multipart/form-data'];
-            $ch = curl_init();
-        
-            // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            // curl_setopt($ch, CURLOPT_POST, true);
-            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-                   
+            $ch = curl_init();   
             curl_setopt($ch,CURLOPT_URL,$url);
-            // curl_setopt($ch, CURLOPT_UPLOAD, true);
-            // curl_setopt($ch, CURLOPT_INFILE, $data);
             curl_setopt($ch, CURLOPT_POST, true);
-            // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            // curl_setopt($ch, CURLOPT_SSL_ENABLE_NPN, false);
-            // curl_setopt($ch, CURLOPT_SSL_ENABLE_ALPN, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            // curl_setopt($ch, CURLSSLOPT_NO_REVOKE,true);
-            // curl_setopt($ch, CURLOPT_PROXY_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             
-          
             $resp = curl_exec($ch);
 
             if(curl_error($ch)){
@@ -239,7 +220,6 @@ class AppointmentController extends Controller
                 $decoded = json_decode($resp);
                 return response()->json([$decoded],200);
             }
-            // return json_decode($resp);
             curl_close($ch);
         }
         
