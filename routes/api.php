@@ -32,7 +32,11 @@ $router->get('export_excel', [
 
 $router->group(['middleware' => 'auth'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
-    
+
+        $router->put('{id}', [
+            'as' => 'user.update', 'uses' => 'UserController@update'
+        ]);
+        
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
             $router->get('', [
                 'as' => 'user.index', 'uses' => 'UserController@index'
@@ -46,9 +50,7 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
                 'as' => 'user.store', 'uses' => 'UserController@store'
             ]);
 
-            $router->put('{id}', [
-                'as' => 'user.update', 'uses' => 'UserController@update'
-            ]);
+           
 
             $router->delete('{id}', [
                 'as' => 'user.destroy', 'uses' => 'UserController@destroy'
