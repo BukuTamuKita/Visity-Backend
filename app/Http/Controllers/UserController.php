@@ -127,12 +127,42 @@ class UserController extends Controller
         //
         $this->validate($request, [
             'email' => 'email|unique:users',
+            'password' => 'string',
         ]);
 
         try {
             $user = User::findOrFail($id);
-            $user->update($request->all());
+            // $user->update($request->all());
+            if(!empty($request->email)){
+                $user->update([
+                    'email' => $request->email,
+                ]);
+            } else {
+                $user->update([
+                    'password'=> bcrypt($request->password)]
+                );
+            }
+           
 
+            return new UserResource($user);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Not Found',
+                'description' => 'User ' . $id . ' not found.'
+            ], 404);
+        }
+    }
+
+    public function resetPassword($id){
+        try {
+            $user = User::findOrFail($id);
+            // $user->update($request->all());
+
+            $user->update([
+                'password'=> bcrypt('password')]
+            );
+            
             return new UserResource($user);
         } catch (ModelNotFoundException $e) {
             return response()->json([

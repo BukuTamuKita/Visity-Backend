@@ -38,6 +38,10 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
         ]);
         
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            $router->put('{id}/reset', [
+                'as' => 'user.reset', 'uses' => 'UserController@resetPassword'
+            ]);
+
             $router->get('', [
                 'as' => 'user.index', 'uses' => 'UserController@index'
             ]);
