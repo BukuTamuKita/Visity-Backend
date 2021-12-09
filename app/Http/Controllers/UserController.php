@@ -50,7 +50,6 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
             'role' => 'required|string',
             'nip' => 'nullable|string|unique:hosts',
             'position' => 'nullable|string',
@@ -60,7 +59,7 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'password' => bcrypt('password'),
                 'role' => $request->role,
                 'photo' => $this->uploadImage($request)
             ]);
